@@ -11,6 +11,7 @@ import (
 	"github.com/go-kit/kit/log/level"
 	"github.com/joho/godotenv"
 	githubql "github.com/shurcooL/githubql"
+	"github.com/slack-go/slack"
 	"golang.org/x/oauth2"
 )
 
@@ -20,7 +21,8 @@ type Config struct {
 	Interval        time.Duration `arg:"env:INTERVAL"`
 	LogLevel        string        `arg:"env:LOG_LEVEL"`
 	Repositories    []string      `arg:"-r,separate"`
-	SlackHook       string        `arg:"env:SLACK_HOOK"`
+	SlackToken      string        `arg:"env:SLACK_TOKEN"`
+	SlackChannel    string        `arg:"env:SLACK_CHANNEL"`
 	IgnoreNonstable bool          `arg:"env:IGNORE_NONSTABLE"`
 }
 
@@ -72,7 +74,11 @@ func main() {
 	releases := make(chan Repository)
 	go checker.Run(c.Interval, c.Repositories, releases)
 
-	slack := SlackSender{Hook: c.SlackHook}
+	slackClient := slack.New(c.SlackToken, slack.OptionDebug(true))
+	slackSender := SlackSender{
+		Client:  slackClient,
+		Channel: c.SlackChannel,
+	}
 
 	level.Info(logger).Log("msg", "waiting for new releases")
 	for repository := range releases {
@@ -80,9 +86,11 @@ func main() {
 			level.Debug(logger).Log("msg", "not notifying about non-stable version", "version", repository.Release.Name)
 			continue
 		}
-		if err := slack.Send(repository); err != nil {
+
+		if err := slackSender.Send(repository); err != nil {
 			level.Warn(logger).Log(
-				"msg", "failed to send release to messenger",
+				"msg", "failed to send release to slack channel",
+				"channel", c.SlackChannel,
 				"err", err,
 			)
 			continue

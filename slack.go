@@ -1,18 +1,15 @@
 package main
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"time"
+
+	"github.com/slack-go/slack"
 )
 
 // SlackSender has the hook to send slack notifications.
 type SlackSender struct {
-	Hook string
+	Client  *slack.Client
+	Channel string
 }
 
 type slackPayload struct {
@@ -23,42 +20,33 @@ type slackPayload struct {
 
 // Send a notification with a formatted message build from the repository.
 func (s *SlackSender) Send(repository Repository) error {
-	payload := slackPayload{
-		Username:  "GitHub Releases",
-		IconEmoji: ":github:",
-		Text: fmt.Sprintf(
-			"<%s|%s/%s>: <%s|%s> released",
-			repository.URL.String(),
-			repository.Owner,
-			repository.Name,
-			repository.Release.URL.String(),
-			repository.Release.Name,
+	headerText := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf(":trumpet: New release published! :trumpet:\n<%s|Release - %s>", repository.Release.URL.String(), repository.Release.Name), false, false)
+	headerSection := slack.NewSectionBlock(headerText, nil, nil)
+
+	attachment := slack.Attachment{
+		Color: "#2eb886",
+		Fields: []slack.AttachmentField{
+			{
+				Value: repository.Release.Description,
+			},
+		},
+		FooterIcon: "https://static-00.iconduck.com/assets.00/github-icon-256x249-eb1fu3cu.png",
+		Footer:     fmt.Sprintf("https://github.com/%s/%s", repository.Owner, repository.Name),
+	}
+
+	_, timestamp, err := s.Client.PostMessage(
+		s.Channel,
+		slack.MsgOptionAttachments(attachment),
+		slack.MsgOptionText("", false),
+		slack.MsgOptionBlocks(
+			headerSection,
 		),
-	}
+	)
 
-	payloadData, err := json.Marshal(payload)
 	if err != nil {
 		return err
 	}
-
-	req, err := http.NewRequest(http.MethodPost, s.Hook, bytes.NewReader(payloadData))
-	if err != nil {
-		return err
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	req = req.WithContext(ctx)
-	defer cancel()
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		body, _ := ioutil.ReadAll(resp.Body)
-		return fmt.Errorf("request didn't respond with 200 OK: %s, %s", resp.Status, body)
-	}
+	fmt.Printf("Message sent at %s", timestamp)
 
 	return nil
 }

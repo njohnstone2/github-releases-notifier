@@ -89,7 +89,7 @@ func (c *Checker) query(owner, name string) (Repository, error) {
 						PublishedAt githubql.DateTime
 					}
 				}
-			} `graphql:"releases(last: 1)"`
+			} `graphql:"releases(last: 1, orderBy: { field: CREATED_AT, direction: ASC})"`
 		} `graphql:"repository(owner: $owner, name: $name)"`
 	}
 

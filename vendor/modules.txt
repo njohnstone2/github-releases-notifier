@@ -11,17 +11,28 @@ github.com/go-kit/kit/log/level
 github.com/go-logfmt/logfmt
 # github.com/golang/protobuf v1.3.2
 github.com/golang/protobuf/proto
+# github.com/gorilla/websocket v1.4.2
+github.com/gorilla/websocket
 # github.com/joho/godotenv v1.3.0
 ## explicit
 github.com/joho/godotenv
 # github.com/shurcooL/githubql v0.0.0-20191127044304-8f68eb5628d0
 ## explicit
 github.com/shurcooL/githubql
+# github.com/shurcooL/githubv4 v0.0.0-20221203213311-70889c5dac07
+## explicit
 # github.com/shurcooL/graphql v0.0.0-20181231061246-d48a9a75455f
 ## explicit
 github.com/shurcooL/graphql
 github.com/shurcooL/graphql/ident
 github.com/shurcooL/graphql/internal/jsonutil
+# github.com/slack-go/slack v0.11.4
+## explicit
+github.com/slack-go/slack
+github.com/slack-go/slack/internal/backoff
+github.com/slack-go/slack/internal/errorsx
+github.com/slack-go/slack/internal/timex
+github.com/slack-go/slack/slackutilsx
 # golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
