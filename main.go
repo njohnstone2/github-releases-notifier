@@ -21,6 +21,7 @@ type Config struct {
 	Interval        time.Duration `arg:"env:INTERVAL"`
 	LogLevel        string        `arg:"env:LOG_LEVEL"`
 	Repositories    []string      `arg:"-r,separate"`
+	Tags            []string      `arg:"-t,separate"`
 	SlackToken      string        `arg:"env:SLACK_TOKEN"`
 	SlackChannel    string        `arg:"env:SLACK_CHANNEL"`
 	IgnoreNonstable bool          `arg:"env:IGNORE_NONSTABLE"`
@@ -59,8 +60,11 @@ func main() {
 	}
 
 	if len(c.Repositories) == 0 {
-		level.Error(logger).Log("msg", "no repositories wo watch")
-		os.Exit(1)
+		level.Warn(logger).Log("msg", "no repositories to watch")
+	}
+
+	if len(c.Tags) == 0 {
+		level.Warn(logger).Log("msg", "no tags to watch")
 	}
 
 	tokenSource := oauth2.StaticTokenSource(c.Token())
@@ -70,9 +74,12 @@ func main() {
 		client: githubql.NewClient(client),
 	}
 
+	repos := buildWatchList(logger, c.Repositories, c.Tags)
+	level.Info(logger).Log("msg", "collected watchlist", "repos", repos)
+
 	// TODO: releases := make(chan Repository, len(c.Repositories))
 	releases := make(chan Repository)
-	go checker.Run(c.Interval, c.Repositories, releases)
+	go checker.Run(c.Interval, repos, releases)
 
 	slackClient := slack.New(c.SlackToken, slack.OptionDebug(true))
 	slackSender := SlackSender{

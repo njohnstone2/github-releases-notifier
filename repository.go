@@ -9,5 +9,6 @@ type Repository struct {
 	Owner       string
 	Description string
 	URL         url.URL
-	Release     Release
+	Release     *Release
+	Tag         *Tag
 }
