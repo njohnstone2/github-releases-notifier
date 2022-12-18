@@ -1,0 +1,48 @@
+# Default values for github-releases-notifier.
+
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: njohnstone2/github-releases-notifier
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+namespace:
+  create: false
+  name: default
+
+secret:
+  create: true
+  github_token: my_token
+  slack_token: my_token
+  slack_channel: general
+
+command:
+  - '/bin/github-releases-notifier'
+
+args:
+  - '-t=golang/go'
+  - '-r=grafana/grafana'
+
+logLevel: info
+interval: 1m
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 25m
+    memory: 64Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+topologySpreadConstraints: []
+
+affinity: {}

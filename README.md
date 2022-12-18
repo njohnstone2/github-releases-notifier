@@ -43,3 +43,6 @@ After creating the secret with your credentials you can apply the deployment:
 `kubectl apply -f deployments/kubernetes.yml`
 
 That's it.
+
+#### Helm
+`helm install github-releases-notifier deployments/helm -f deployments/helm/values.yaml`
