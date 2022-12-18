@@ -64,7 +64,7 @@ megacheck:
 
 .PHONY: test
 test:
-	STATUS=0; for PKG in $(PACKAGES); do go test -cover -coverprofile $$GOPATH/src/$$PKG/coverage.out $$PKG || STATUS=1; done; exit $$STATUS
+	STATUS=0; for PKG in $(PACKAGES); do go test $$PKG || STATUS=1; done; exit $$STATUS
 
 .PHONY: build
 build: $(EXECUTABLE)-$(GOOS)-$(GOARCH)
