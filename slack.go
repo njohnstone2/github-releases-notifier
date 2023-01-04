@@ -43,7 +43,8 @@ func (s *SlackSender) Send(repository Repository) error {
 }
 
 func (s *SlackSender) buildReleaseMessage(r Repository) []slack.MsgOption {
-	headerText := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf(":rocket: New release published! :rocket:\n<%s|Release - %s>", r.Release.URL.String(), r.Release.Name), false, false)
+	title := fmt.Sprintf("%s/%s:%s", r.Owner, r.Name, r.Release.Name)
+	headerText := slack.NewTextBlockObject("mrkdwn", fmt.Sprintf(":rocket: New release published! :rocket:\n<%s|Release - %s>", r.Release.URL.String(), title), false, false)
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
 
 	attachment := slack.Attachment{
@@ -67,12 +68,13 @@ func (s *SlackSender) buildReleaseMessage(r Repository) []slack.MsgOption {
 }
 
 func (s *SlackSender) buildTagMessage(r Repository) []slack.MsgOption {
+	url := fmt.Sprintf("https://github.com/%s/%s/releases/tag/%s", r.Owner, r.Name, r.Tag.Name)
 	attachment := slack.Attachment{
 		Color: "#2eb886",
 		Fields: []slack.AttachmentField{
 			{
 				Title: fmt.Sprintf("%s/%s", r.Owner, r.Name),
-				Value: fmt.Sprintf(":label: %s tag published! :label:", r.Tag.Name),
+				Value: fmt.Sprintf(":label: <%s|%s> tag published! :label:", url, r.Tag.Name),
 			},
 		},
 		FooterIcon: "https://static-00.iconduck.com/assets.00/github-icon-256x249-eb1fu3cu.png",
