@@ -3,4 +3,4 @@ appVersion: 0.1.4
 description: Watches github repositories for new releases/tags.
 name: github-releases-notifier
 type: application
-version: 0.1.4
+version: v0.1.4

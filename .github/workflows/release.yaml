@@ -31,7 +31,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        release_name: ${{ github.ref }}
         draft: false
         prerelease: false
 
@@ -39,12 +39,6 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release/github-releases-notifier-helm-3-chart-0.1.4.tgz
-        asset_name: github-releases-notifier-helm-3-chart-0.1.4.tgz
+        asset_path: ./release/github-releases-notifier-helm-3-chart-${{ github.ref }}.tgz
+        asset_name: github-releases-notifier-helm-3-chart-${{ github.ref }}.tgz
         asset_content_type: application/gzip
-    
-    # - name: Upload Artifacts
-    #   uses: actions/upload-artifact@v3
-    #   with: 
-    #     name: artifacts
-    #     path: release
