@@ -1,7 +1,7 @@
 CP = cp
 
 RELEASE_VERSION ?= latest
-CHART_SEMANTIC_RELEASE_VERSION ?= $(shell cat ../VERSION | tr A-Z a-z)
+CHART_SEMANTIC_RELEASE_VERSION ?= $(shell git tag | sort -V | tail -1)
 CHART_NAME=github-releases-notifier
 CHART_PATH ?= helm/
 CHART_RENDERED_TEMPLATES_TMP=../target/charts
