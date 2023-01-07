@@ -12,13 +12,13 @@ image:
   tag: "latest"
 
 namespace:
-  create: false
-  name: default
+  create: true
+  name: github-releases-notifier
 
 secret:
   create: true
-  github_token: my_token
-  slack_token: my_token
+  github_token: my_github_token
+  slack_token: my_slack_token
   slack_channel: general
 
 command:

@@ -3,15 +3,17 @@ version: '2'
 services:
   github-releases-notifier:
     restart: always
-    image: justwatch/github-releases-notifier
+    image: njohnstone2/github-releases-notifier:latest
     environment:
-      - GITHUB_TOKEN=XXX
-      - SLACK_HOOK=https://hooks.slack.com/services/T02MASDF7/B6WERHYRZ/XXX
+      - GITHUB_TOKEN=ghp_xxxx
+      - INTERVAL=1m
+      - LOG_LEVEL=info
+      - SLACK_TOKEN=xoxb-xxxx
+      - SLACK_CHANNEL=general
     command:
-      - '-r=golang/go'
+      - '-t=golang/go'
       - '-r=justwatchcom/elasticsearch_exporter'
       - '-r=justwatchcom/gopass'
       - '-r=justwatchcom/sql_exporter'
       - '-r=kubernetes/minikube'
       - '-r=prometheus/prometheus'
-      - '-r=shurcooL/githubql'
