@@ -1,6 +1,6 @@
 apiVersion: v2
-appVersion: 0.1.2
+appVersion: 0.1.3
 description: Watches github repositories for new releases/tags.
 name: github-releases-notifier
 type: application
-version: 0.1.2
+version: 0.1.3
