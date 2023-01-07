@@ -2,20 +2,31 @@ name: Publish Artifacts
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "github_ci" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_REPO: ${{ github.repository }}
+
 jobs:
-  archive-build-artifacts:
+  publish-artifacts:
+
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
     steps:
+    - uses: actions/checkout@v3
 
-      - name: Run release steps
-        run: make release
+    - name: Create release artifacts
+      run: make release
 
-      - name: Upload Artifacts to GitHub
-        uses: actions/upload-artifact@v2
-        with: 
-          name: assets-for-download
-          path: release
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with: 
+        name: artifacts
+        path: release
