@@ -1,0 +1,21 @@
+name: Publish Artifacts
+
+on:
+  push:
+    branches: [ "master" ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  archive-build-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Run release steps
+        run: make release
+
+      - name: Upload Artifacts to GitHub
+        uses: actions/upload-artifact@v2
+        with: 
+          name: assets-for-download
+          path: release

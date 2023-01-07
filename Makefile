@@ -1,3 +1,5 @@
+include ./Makefile.release
+
 DIST := dist
 BIN := bin
 
