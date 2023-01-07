@@ -1,5 +1,5 @@
 PROJECT_NAME ?= github-releases-notifier
-CHART_SEMANTIC_RELEASE_VERSION ?= $(shell cat ./VERSION | tr A-Z a-z)
+CHART_SEMANTIC_RELEASE_VERSION ?= $(shell git tag | sort -V | tail -1)
 
 RELEASE_DIR ?= "./release"
 RELEASE_NAME ?= "$(PROJECT_NAME)-$(CHART_SEMANTIC_RELEASE_VERSION)"
