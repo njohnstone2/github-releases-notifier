@@ -40,8 +40,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release/github-releases-notifier-0.1.3.tgz
-        asset_name: github-releases-notifier-0.1.3.tgz
+        asset_path: ./release/github-releases-notifier-helm-3-chart-0.1.3.tgz
+        asset_name: github-releases-notifier-helm-3-chart-0.1.3.tgz
         asset_content_type: application/gzip
     
     # - name: Upload Artifacts
